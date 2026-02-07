@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN DASHBOARD | TACTICAL OPS</title>
+    <!-- Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="style.css" rel="stylesheet">
+    <style>
+        /* Admin Specific Styles */
+        body {
+            overflow: hidden;
+            background: #000;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: #050505;
+            border-right: 1px solid #222;
+            z-index: 1000;
+            padding-top: 20px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        .nav-link {
+            color: #888;
+            padding: 15px 25px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+            background: rgba(251, 191, 36, 0.1);
+            border-left-color: #fbbf24;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fbbf24;
+        }
+    </style>
+</head>
+
+<body onload="initAdmin()">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="text-center mb-5">
+            <h3 class="font-military text-gold mb-0">TACTICAL</h3>
+            <small class="text-muted font-tech">COMMAND CENTER</small>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#" onclick="switchTab('dashboard', this)">
+                <i class="fas fa-chart-line me-2"></i> Dashboard
+            </a>
+            <a class="nav-link" href="#" onclick="switchTab('products', this)">
+                <i class="fas fa-box-open me-2"></i> Armory (Products)
+            </a>
+            <a class="nav-link" href="#" onclick="switchTab('orders', this)">
+                <i class="fas fa-clipboard-list me-2"></i> Missions (Orders)
+            </a>
+            <a class="nav-link" href="#" onclick="switchTab('users', this)">
+                <i class="fas fa-users me-2"></i> Operatives (Users)
+            </a>
+            
+            <!-- ปุ่ม RESET DATA -->
+            <div class="mt-5 px-3">
+                 <button class="btn btn-outline-danger w-100" onclick="resetSystemData()">
+                    <i class="fas fa-sync me-2"></i> SYNC FROM CODE
+                </button>
+                <small class="text-muted d-block text-center mt-2" style="font-size: 10px;">(กดเมื่อแก้โค้ด data.js แล้วไม่ขึ้น)</small>
+            </div>
+            
+            <a class="nav-link text-danger mt-3" href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i> LOGOUT
+            </a>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        
+        <!-- DASHBOARD SECTION -->
+        <div id="tab-dashboard" class="content-section">
+            <h2 class="font-military mb-4">MISSION STATUS</h2>
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="p-4 stat-card text-center">
+                        <h1 class="text-gold display-4 fw-bold" id="totalSales">0</h1>
+                        <small class="text-muted">TOTAL REVENUE (THB)</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 stat-card text-center">
+                        <h1 class="text-info display-4 fw-bold" id="totalOrders">0</h1>
+                        <small class="text-muted">TOTAL ORDERS</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 stat-card text-center">
+                        <h1 class="text-success display-4 fw-bold" id="totalProducts">0</h1>
+                        <small class="text-muted">ITEMS IN ARMORY</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 stat-card text-center">
+                        <h1 class="text-danger display-4 fw-bold" id="totalUsers">0</h1>
+                        <small class="text-muted">ACTIVE OPERATIVES</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart Container -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="p-4 stat-card h-100">
+                        <h5 class="font-tech text-gold mb-3">SALES ANALYTICS</h5>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 stat-card h-100">
+                        <h5 class="font-tech text-gold mb-3">RECENT ACTIVITY</h5>
+                        <div id="recentActivity" class="small text-muted"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS SECTION -->
+        <div id="tab-products" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="font-military">ARMORY INVENTORY</h2>
+                <button class="btn btn-gold fw-bold" onclick="openProductModal()">
+                    <i class="fas fa-plus me-2"></i> ADD NEW ITEM
+                </button>
+            </div>
+            <div class="table-responsive stat-card p-3">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr class="text-gold font-tech">
+                            <th>IMG</th>
+                            <th>ITEM NAME</th>
+                            <th>CATEGORY</th>
+                            <th>PRICE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ORDERS SECTION -->
+        <div id="tab-orders" class="content-section d-none">
+            <h2 class="font-military mb-4">MISSION LOGS (ORDERS)</h2>
+            <div class="table-responsive stat-card p-3">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr class="text-gold font-tech">
+                            <th>ORDER ID</th>
+                            <th>OPERATIVE</th>
+                            <th>TOTAL</th>
+                            <th>PAYMENT</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- USERS SECTION -->
+        <div id="tab-users" class="content-section d-none">
+            <h2 class="font-military mb-4">OPERATIVE ROSTER</h2>
+            <div class="table-responsive stat-card p-3">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr class="text-gold font-tech">
+                            <th>USERNAME</th>
+                            <th>FULL NAME</th>
+                            <th>CONTACT</th>
+                            <th>ADDRESS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: ADD/EDIT PRODUCT -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title font-rajdhani fw-bold" id="modalTitle">ADD ITEM</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="pId">
+                    <div class="mb-3">
+                        <label class="form-label text-gold">ITEM NAME</label>
+                        <input type="text" class="form-control bg-black text-white border-secondary" id="pName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-gold">CATEGORY</label>
+                        <select class="form-select bg-black text-white border-secondary" id="pCat">
+                            <option value="WEAPONS">WEAPONS</option>
+                            <option value="ARMOR">ARMOR</option>
+                            <option value="GEAR">GEAR</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-gold">PRICE (THB)</label>
+                        <input type="number" class="form-control bg-black text-white border-secondary" id="pPrice">
+                    </div>
+                    
+                    <!-- ส่วนอัปโหลดรูปภาพ -->
+                    <div class="mb-3">
+                        <label class="form-label text-gold">IMAGE SOURCE</label>
+                        <ul class="nav nav-tabs border-secondary mb-3" id="imgTab" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active text-white" data-bs-toggle="tab" data-bs-target="#tab-url" type="button">URL Link</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#tab-file" type="button">Upload File</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content">
+                            <!-- Tab 1: URL -->
+                            <div class="tab-pane fade show active" id="tab-url">
+                                <input type="text" class="form-control bg-black text-white border-secondary" id="pImg" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <!-- Tab 2: File Upload -->
+                            <div class="tab-pane fade" id="tab-file">
+                                <input type="file" class="form-control bg-black text-white border-secondary" id="pImgFile" accept="image/*">
+                                <small class="text-muted d-block mt-2">* รองรับไฟล์ภาพ (ระบบจะแปลงเป็น Code Base64)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary fw-bold" onclick="saveProduct()">SAVE DATA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER DETAILS -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title font-rajdhani fw-bold">ORDER DETAILS</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailContent"></div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success fw-bold" onclick="updateOrderStatus('COMPLETED')">MARK AS
+                        COMPLETED</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- IMPORT DATA FILE HERE -->
+    <script src="data.js"></script> 
+    
+    <script src="admin.js"></script>
+</body>
+
+</html>

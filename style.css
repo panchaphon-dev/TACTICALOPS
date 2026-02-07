@@ -1,0 +1,124 @@
+/* --- TACTICAL OPS : ELITE THEME v2.0 --- */
+
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@400;600;700&family=Prompt:wght@300;400;600&display=swap');
+
+:root {
+    --gold: #fbbf24;
+    --gold-dark: #d97706;
+    --black: #050505;
+    --dark-grey: #121212;
+    --border-color: #333;
+    
+    --font-military: 'Black Ops One', cursive;
+    --font-tech: 'Rajdhani', sans-serif;
+    --font-body: 'Prompt', sans-serif;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--black);
+    color: white;
+    overflow-x: hidden;
+    padding-top: 70px; /* เว้นที่ให้ Navbar */
+}
+
+/* --- TYPOGRAPHY --- */
+.font-military { font-family: var(--font-military); letter-spacing: 2px; }
+.font-tech { font-family: var(--font-tech); text-transform: uppercase; }
+.text-gold { color: var(--gold) !important; }
+.text-shadow { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+
+/* --- NAVBAR --- */
+.navbar-tactical {
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+}
+.nav-link {
+    font-family: var(--font-tech);
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #aaa !important;
+    transition: 0.3s;
+    position: relative;
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--gold) !important;
+}
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10%; width: 80%;
+    height: 2px;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* --- COMPONENTS --- */
+.btn-gold {
+    background: var(--gold);
+    color: black;
+    font-weight: bold;
+    font-family: var(--font-tech);
+    padding: 10px 25px;
+    border: none;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: 0.3s;
+}
+.btn-gold:hover {
+    background: white;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    transform: translateY(-2px);
+}
+
+.tactical-card {
+    background: #0f0f0f;
+    border: 1px solid #222;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.tactical-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.tactical-card img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* --- BACKGROUNDS --- */
+.bg-grid {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(#222 1px, transparent 1px);
+    background-size: 30px 30px;
+    z-index: -1;
+    pointer-events: none;
+}
+.scanlines {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* --- PAGE HEADER --- */
+.page-header {
+    background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1595590424283-b8f17842773f?auto=format&fit=crop&q=80&w=1920');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0 50px;
+    margin-bottom: 50px;
+    border-bottom: 2px solid var(--gold);
+}
+
+/* --- FOOTER --- */
+footer {
+    background: #020202;
+    border-top: 1px solid #222;
+    margin-top: 80px;
+    padding: 50px 0 20px;
+}

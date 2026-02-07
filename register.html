@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTER | TACTICAL OPS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .auth-bg {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1615526675159-e248c3021d3f?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+        }
+        .auth-card::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 50px;
+            border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold);
+        }
+    </style>
+</head>
+<body class="auth-bg">
+    <div class="auth-card">
+        <h3 class="font-military text-white mb-3"><i class="fas fa-id-card text-gold me-2"></i>NEW RECRUITMENT</h3>
+        <form onsubmit="event.preventDefault(); register()">
+            <div class="row g-2">
+                <div class="col-md-6 mb-2">
+                    <label class="text-muted small">USERNAME</label>
+                    <input type="text" id="rUser" class="form-control bg-black border-secondary text-white" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="text-muted small">PASSWORD</label>
+                    <input type="password" id="rPass" class="form-control bg-black border-secondary text-white" required>
+                </div>
+            </div>
+            
+            <div class="mb-2">
+                <label class="text-muted small">FULL NAME (ชื่อ-นามสกุล)</label>
+                <input type="text" id="rName" class="form-control bg-black border-secondary text-white" required>
+            </div>
+            
+            <div class="mb-2">
+                <label class="text-muted small">PHONE (เบอร์โทร)</label>
+                <input type="tel" id="rPhone" class="form-control bg-black border-secondary text-white" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="text-muted small">ADDRESS (ที่อยู่จัดส่ง)</label>
+                <textarea id="rAddr" class="form-control bg-black border-secondary text-white" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-outline-gold w-100 fw-bold">CONFIRM ENLISTMENT</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="login.html" class="text-muted small text-decoration-none">ALREADY HAVE ACCOUNT? LOGIN</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function register() {
+            const u = document.getElementById('rUser').value;
+            const p = document.getElementById('rPass').value;
+            const n = document.getElementById('rName').value;
+            const ph = document.getElementById('rPhone').value;
+            const a = document.getElementById('rAddr').value;
+
+            let users = JSON.parse(localStorage.getItem('tactical_users')) || [];
+
+            // เช็คชื่อซ้ำ
+            if(users.find(x => x.username === u)) {
+                return Swal.fire({ icon: 'error', title: 'ERROR', text: 'Username already taken', background: '#000', color: '#fff' });
+            }
+
+            // บันทึก
+            users.push({ username: u, password: p, name: n, phone: ph, address: a });
+            localStorage.setItem('tactical_users', JSON.stringify(users));
+
+            Swal.fire({
+                icon: 'success', title: 'ENLISTED SUCCESS', 
+                text: 'Registration Complete!',
+                background: '#000', color: '#fbbf24', iconColor: '#fbbf24',
+                timer: 2000, showConfirmButton: false
+            }).then(() => window.location.href = 'login.html');
+        }
+    </script>
+</body>
+</html>
