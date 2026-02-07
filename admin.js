@@ -14,10 +14,10 @@ function initAdmin() {
         return;
     }
 
-    // 2. FORCE SYNC DATA (สำคัญ: บังคับโหลดข้อมูลจาก data.js ทุกครั้ง)
-    // วิธีนี้จะทำให้ข้อมูลในเว็บตรงกับในโค้ดเสมอ และลบสินค้าส่วนเกินทิ้งไป
+    // 2. HARD RESET SYSTEM DATA (แก้ใหม่: บังคับทับข้อมูลเก่าทิ้งทั้งหมด)
     if (typeof SYSTEM_DATA !== 'undefined' && SYSTEM_DATA.length > 0) {
-        console.log("Forcing System Data Sync...");
+        console.log("HARD RESET: Overwriting all product data with SYSTEM_DATA");
+        // บันทึกข้อมูล 15 ชิ้นทับลงไปเลย ไม่สนข้อมูลเก่า
         saveData(KEYS.PRODUCTS, SYSTEM_DATA); 
     }
 
@@ -40,11 +40,16 @@ function switchTab(tabId, btn) {
     btn.classList.add('active');
 }
 
-// ฟังก์ชันนี้เก็บไว้เผื่อใช้ แต่ตอนนี้ระบบ Auto-Sync ทำงานแทนแล้ว
+// ฟังก์ชัน Sync (กดปุ่มนี้ก็จะบังคับล้างเหมือนกัน)
 function resetSystemData() {
     if (typeof SYSTEM_DATA !== 'undefined') {
         saveData(KEYS.PRODUCTS, SYSTEM_DATA);
-        location.reload();
+        Swal.fire({
+            title: 'SYSTEM RESET',
+            text: 'ล้างข้อมูลสินค้าทั้งหมดกลับเป็นค่าเริ่มต้น 15 ชิ้นเรียบร้อย',
+            icon: 'success',
+            background: '#111', color: '#fff'
+        }).then(() => location.reload());
     }
 }
 
@@ -142,7 +147,6 @@ function saveProduct() {
     const name = document.getElementById('pName').value;
     const cat = document.getElementById('pCat').value;
     const price = Number(document.getElementById('pPrice').value);
-    
     const urlInput = document.getElementById('pImg');
     const fileInput = document.getElementById('pImgFile');
 
@@ -150,7 +154,6 @@ function saveProduct() {
 
     const commitSave = (finalImage) => {
         let products = getData(KEYS.PRODUCTS);
-        
         if (id) {
             const idx = products.findIndex(x => x.id === id);
             if (idx !== -1) {
@@ -161,7 +164,6 @@ function saveProduct() {
             const fallbackImg = 'https://via.placeholder.com/400x400?text=TACTICAL';
             products.push({ id: newId, name, category: cat, price, image: finalImage || fallbackImg });
         }
-        
         saveData(KEYS.PRODUCTS, products);
         renderProducts();
         renderDashboard();

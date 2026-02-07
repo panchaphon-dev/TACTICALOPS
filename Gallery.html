@@ -39,11 +39,10 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <!-- id="navAuth" จะถูกจัดการโดย checkAuth() ใน data.js -->
                 <ul class="navbar-nav ms-auto align-items-center gap-3" id="navAuth">
                     <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
                     <li class="nav-item"><a class="nav-link active text-gold" href="Gallery.html">ARMORY</a></li>
-                   <li class="nav-item"><a class="nav-link" href="ABOUT.html">ABOUT</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ABOUT.html">ABOUT</a></li>
                 </ul>
             </div>
         </div>
@@ -201,7 +200,6 @@
     <script src="data.js"></script>
 
     <script>
-        // --- ส่วนนี้เหมือนเดิม แค่เพิ่ม checkAuth() ใน initSystem ---
         let cart = [];
         let allProducts = [];
         let currentModalProductId = null;
@@ -227,14 +225,11 @@
 
         // --- CORE SYSTEM ---
         function initSystem() {
-            // เรียกฟังก์ชันตรวจสอบ Login ก่อนเลย
-            checkAuth(); 
+            checkAuth();
 
             if (typeof SYSTEM_DATA !== 'undefined' && SYSTEM_DATA.length > 0) {
-                const localProducts = JSON.parse(localStorage.getItem('tactical_products')) || [];
-                const systemIds = SYSTEM_DATA.map(p => p.id);
-                const extraProducts = localProducts.filter(p => !systemIds.includes(p.id));
-                allProducts = [...SYSTEM_DATA, ...extraProducts];
+                // แก้ไข: ใช้ข้อมูลจาก SYSTEM_DATA เท่านั้น ไม่มีการ Merge
+                allProducts = SYSTEM_DATA; 
                 localStorage.setItem('tactical_products', JSON.stringify(allProducts));
             } else {
                 allProducts = JSON.parse(localStorage.getItem('tactical_products')) || [];
@@ -330,11 +325,6 @@
             const input = document.getElementById('commentInput');
             const text = input.value.trim();
             if (!text || !currentModalProductId) return;
-            
-            // เช็คว่าล็อกอินยัง? (ถ้าต้องการบังคับ)
-            // const session = sessionStorage.getItem('tactical_session');
-            // if(!session) return Swal.fire('Error', 'Please Login first', 'error');
-
             const allComments = JSON.parse(localStorage.getItem('tactical_comments')) || {};
             if (!allComments[currentModalProductId]) allComments[currentModalProductId] = [];
             allComments[currentModalProductId].unshift({ user: 'Operative', text: text, date: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) });
@@ -378,7 +368,6 @@
         function openCheckoutModal() {
             if(cart.length === 0) return Swal.fire('Error', 'Cart is empty', 'error');
             
-            // เช็คว่าล็อกอินยัง?
             const session = sessionStorage.getItem('tactical_session');
             if(!session) {
                  return Swal.fire({
@@ -391,7 +380,6 @@
                 });
             }
 
-            // Auto-fill user info
             const user = JSON.parse(session);
             document.getElementById('cName').value = user.name || '';
             document.getElementById('cPhone').value = user.phone || '';
