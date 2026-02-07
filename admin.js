@@ -14,12 +14,11 @@ function initAdmin() {
         return;
     }
 
-    // 2. CHECK DATA INTEGRITY
-    // ถ้าใน LocalStorage ไม่มีข้อมูล ให้ดึงจาก data.js (SYSTEM_DATA) มาใส่
-    const currentProducts = JSON.parse(localStorage.getItem(KEYS.PRODUCTS)) || [];
-    if (currentProducts.length === 0 && typeof SYSTEM_DATA !== 'undefined') {
-        console.log("Loading System Data from data.js...");
-        saveData(KEYS.PRODUCTS, SYSTEM_DATA);
+    // 2. FORCE SYNC DATA (สำคัญ: บังคับโหลดข้อมูลจาก data.js ทุกครั้ง)
+    // วิธีนี้จะทำให้ข้อมูลในเว็บตรงกับในโค้ดเสมอ และลบสินค้าส่วนเกินทิ้งไป
+    if (typeof SYSTEM_DATA !== 'undefined' && SYSTEM_DATA.length > 0) {
+        console.log("Forcing System Data Sync...");
+        saveData(KEYS.PRODUCTS, SYSTEM_DATA); 
     }
 
     // 3. Load Dashboard Data
@@ -41,26 +40,12 @@ function switchTab(tabId, btn) {
     btn.classList.add('active');
 }
 
-// ฟังก์ชัน Sync ข้อมูลจากโค้ด (data.js)
+// ฟังก์ชันนี้เก็บไว้เผื่อใช้ แต่ตอนนี้ระบบ Auto-Sync ทำงานแทนแล้ว
 function resetSystemData() {
-    Swal.fire({
-        title: 'SYNC FROM CODE?',
-        text: "ข้อมูลสินค้าจะถูกรีเซ็ตให้ตรงกับไฟล์ data.js!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        confirmButtonText: 'YES, SYNC',
-        background: '#000', color: '#fff'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            if (typeof SYSTEM_DATA !== 'undefined') {
-                saveData(KEYS.PRODUCTS, SYSTEM_DATA);
-                location.reload();
-            } else {
-                Swal.fire('Error', 'ไม่พบไฟล์ data.js', 'error');
-            }
-        }
-    });
+    if (typeof SYSTEM_DATA !== 'undefined') {
+        saveData(KEYS.PRODUCTS, SYSTEM_DATA);
+        location.reload();
+    }
 }
 
 // --- DATA HELPERS ---
@@ -122,7 +107,6 @@ function renderProducts() {
             <td class="text-gold font-monospace">${p.price.toLocaleString()}</td>
             <td>
                 <button class="btn btn-sm btn-outline-warning" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash"></i></button>
             </td>
         </tr>
     `).join('');
@@ -134,7 +118,7 @@ function openProductModal() {
     document.getElementById('pName').value = '';
     document.getElementById('pPrice').value = '';
     document.getElementById('pImg').value = '';
-    document.getElementById('pImgFile').value = ''; // Reset file input
+    document.getElementById('pImgFile').value = '';
     new bootstrap.Modal(document.getElementById('productModal')).show();
 }
 
@@ -153,7 +137,6 @@ function editProduct(id) {
     }
 }
 
-// *** ระบบบันทึกและแปลงไฟล์รูปภาพ ***
 function saveProduct() {
     const id = document.getElementById('pId').value;
     const name = document.getElementById('pName').value;
@@ -183,7 +166,7 @@ function saveProduct() {
         renderProducts();
         renderDashboard();
         bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
-        Swal.fire({ icon: 'success', title: 'SAVED', toast: true, position: 'top-end', timer: 1500, background: '#000', color: '#fbbf24' });
+        Swal.fire({ icon: 'success', title: 'SAVED', toast: true, position: 'top-end', timer: 1500, background: '#111', color: '#fbbf24' });
     };
 
     if (fileInput.files && fileInput.files[0]) {
@@ -193,25 +176,6 @@ function saveProduct() {
     } else {
         commitSave(urlInput.value);
     }
-}
-
-function deleteProduct(id) {
-    Swal.fire({
-        title: 'CONFIRM DELETION?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        background: '#000', color: '#fff',
-        confirmButtonText: 'YES'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let products = getData(KEYS.PRODUCTS);
-            products = products.filter(x => x.id !== id);
-            saveData(KEYS.PRODUCTS, products);
-            renderProducts();
-            renderDashboard();
-        }
-    });
 }
 
 // --- ORDER MANAGEMENT ---
@@ -270,6 +234,7 @@ function viewOrder(id) {
             <span>TOTAL AMOUNT</span>
             <span>฿${order.total.toLocaleString()}</span>
         </div>
+        ${order.paymentMethod === 'QR' ? '<div class="alert alert-info bg-dark border-info text-info mt-2"><i class="fas fa-info-circle me-2"></i>User selected QR Payment.</div>' : ''}
     `;
     
     document.getElementById('orderDetailContent').innerHTML = content;
@@ -286,7 +251,7 @@ function updateOrderStatus(status) {
         renderOrders();
         bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
         renderDashboard(); 
-        Swal.fire({icon:'success', title:'UPDATED', toast:true, position:'top', timer:1000, background:'#000', color:'#fff'});
+        Swal.fire({icon:'success', title:'UPDATED', toast:true, position:'top', timer:1000, background:'#111', color:'#fff'});
     }
 }
 

@@ -8,64 +8,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="style.css" rel="stylesheet">
     <style>
-        .auth-bg {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1615526675159-e248c3021d3f?auto=format&fit=crop&q=80&w=1920');
-            background-size: cover;
-            min-height: 100vh;
+        body {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding-top: 20px;
+            padding-bottom: 20px;
         }
-        .auth-card {
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid #333;
+        .auth-container {
             width: 100%;
-            max-width: 500px;
-            padding: 2rem;
-            position: relative;
-        }
-        .auth-card::after {
-            content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 50px;
-            border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold);
+            max-width: 550px;
+            padding: 20px;
         }
     </style>
 </head>
-<body class="auth-bg">
-    <div class="auth-card">
-        <h3 class="font-military text-white mb-3"><i class="fas fa-id-card text-gold me-2"></i>NEW RECRUITMENT</h3>
-        <form onsubmit="event.preventDefault(); register()">
-            <div class="row g-2">
-                <div class="col-md-6 mb-2">
-                    <label class="text-muted small">USERNAME</label>
-                    <input type="text" id="rUser" class="form-control bg-black border-secondary text-white" required>
-                </div>
-                <div class="col-md-6 mb-2">
-                    <label class="text-muted small">PASSWORD</label>
-                    <input type="password" id="rPass" class="form-control bg-black border-secondary text-white" required>
-                </div>
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="auth-container">
+        <div class="auth-card p-4 p-md-5">
+            <div class="text-center mb-4">
+                <h2 class="font-military text-gold">NEW RECRUITMENT</h2>
+                <p class="text-muted font-tech">CREATE OPERATIVE PROFILE</p>
             </div>
             
-            <div class="mb-2">
-                <label class="text-muted small">FULL NAME (ชื่อ-นามสกุล)</label>
-                <input type="text" id="rName" class="form-control bg-black border-secondary text-white" required>
-            </div>
+            <form onsubmit="event.preventDefault(); register();">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">USERNAME</label>
+                        <input type="text" class="form-control" id="rUser" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">PASSWORD</label>
+                        <input type="password" class="form-control" id="rPass" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">FULL NAME</label>
+                    <input type="text" class="form-control" id="rName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">PHONE</label>
+                    <input type="tel" class="form-control" id="rPhone" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">SHIPPING ADDRESS</label>
+                    <textarea class="form-control" id="rAddr" rows="2" required placeholder="For delivery..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-gold w-100 py-2 fs-5">
+                    CONFIRM REGISTRATION
+                </button>
+            </form>
             
-            <div class="mb-2">
-                <label class="text-muted small">PHONE (เบอร์โทร)</label>
-                <input type="tel" id="rPhone" class="form-control bg-black border-secondary text-white" required>
+            <div class="text-center mt-4 font-tech">
+                <a href="login.html" class="text-white text-decoration-none">ALREADY HAVE ACCOUNT? <span class="text-gold">LOGIN</span></a>
             </div>
-
-            <div class="mb-4">
-                <label class="text-muted small">ADDRESS (ที่อยู่จัดส่ง)</label>
-                <textarea id="rAddr" class="form-control bg-black border-secondary text-white" rows="3" required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-outline-gold w-100 fw-bold">CONFIRM ENLISTMENT</button>
-        </form>
-
-        <div class="text-center mt-3">
-            <a href="login.html" class="text-muted small text-decoration-none">ALREADY HAVE ACCOUNT? LOGIN</a>
         </div>
     </div>
 
@@ -80,20 +81,18 @@
 
             let users = JSON.parse(localStorage.getItem('tactical_users')) || [];
 
-            // เช็คชื่อซ้ำ
             if(users.find(x => x.username === u)) {
-                return Swal.fire({ icon: 'error', title: 'ERROR', text: 'Username already taken', background: '#000', color: '#fff' });
+                return Swal.fire({ icon: 'error', title: 'ERROR', text: 'Username already taken', background: 'rgba(20,20,20,0.9)', color: '#fff' });
             }
 
-            // บันทึก
             users.push({ username: u, password: p, name: n, phone: ph, address: a });
             localStorage.setItem('tactical_users', JSON.stringify(users));
 
             Swal.fire({
                 icon: 'success', title: 'ENLISTED SUCCESS', 
                 text: 'Registration Complete!',
-                background: '#000', color: '#fbbf24', iconColor: '#fbbf24',
-                timer: 2000, showConfirmButton: false
+                background: 'rgba(20,20,20,0.9)', color: '#fff', iconColor: '#FFD700',
+                timer: 1500, showConfirmButton: false
             }).then(() => window.location.href = 'login.html');
         }
     </script>

@@ -8,78 +8,90 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body onload="checkAuth()">
     <div class="bg-grid"></div>
-    <div class="scanlines"></div>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-tactical fixed-top">
         <div class="container">
             <a class="navbar-brand text-gold font-military" href="index.html">
-                <i class="fas fa-shield-alt"></i> TACTICAL<span class="text-white">OPS</span>
+                <i class="fas fa-shield-alt me-2"></i>TACTICAL<span class="text-white">OPS</span>
             </a>
-            <button class="navbar-toggler btn-sm btn-outline-warning" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler btn-sm btn-outline-warning" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto text-uppercase">
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-3" id="navAuth">
                     <li class="nav-item"><a class="nav-link active" href="index.html">HOME</a></li>
-                    <li class="nav-item"><a class="nav-link" href="Gallery.html">SHOP</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">ABOUT</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">CONTACT</a></li>
-                    <li class="nav-item"><a class="nav-link" href="profile.html">PROFILE</a></li>
-                    <li class="nav-item"><a class="nav-link" href="admin-login.html">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Gallery.html">ARMORY</a></li>
+    
+                    <li class="nav-item ms-2">
+                        <a href="login.html" class="btn btn-outline-warning btn-sm fw-bold px-4 py-2">LOGIN</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <section class="d-flex align-items-center" style="height: 100vh; margin-top: -70px; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1605648916361-9bc12ad6a569?auto=format&fit=crop&q=80&w=1920'); background-size: cover; background-position: center;">
-        <div class="container text-center">
-            <h1 class="display-1 font-military text-white text-shadow mb-4">
-                PREPARE FOR <span class="text-gold">WAR</span>
-            </h1>
-            <p class="lead text-white font-body mb-5 mx-auto" style="max-width: 600px;">
-                ยินดีต้อนรับสู่ Tactical Ops ศูนย์รวมยุทธภัณฑ์ระดับมืออาชีพ 
-                เราคัดสรรอาวุธและอุปกรณ์ป้องกันที่ดีที่สุดเพื่อภารกิจของคุณ
-            </p>
-            <a href="Gallery.html" class="btn btn-gold btn-lg shadow-lg">
-                <i class="fas fa-shopping-cart me-2"></i> เข้าชมสินค้า
+    <section class="vh-100 d-flex align-items-center justify-content-center text-center position-relative">
+        <div class="container z-2">
+            <h1 class="display-1 font-military text-white mb-2" style="text-shadow: 0 0 20px rgba(0,0,0,0.8);">TACTICAL OPS</h1>
+            <h4 class="font-tech text-gold mb-4 letter-spacing-2">ELITE GEAR FOR ELITE OPERATORS</h4>
+            
+            <div class="tactical-card d-inline-block p-4 mb-5" style="background: rgba(0,0,0,0.6); max-width: 700px;">
+                <p class="lead text-light mb-0">
+                    ยุทโธปกรณ์คุณภาพสูงสำหรับปฏิบัติการพิเศษ พร้อมรับมือทุกสถานการณ์ <br>
+                    มาตรฐานกองทัพ ทนทาน แม่นยำ และเชื่อถือได้
+                </p>
+            </div>
+            
+            <br>
+            <a href="Gallery.html" class="btn btn-gold btn-lg shadow-lg fw-bold px-5 py-3 fs-4">
+                <i class="fas fa-shopping-cart me-2"></i> VISIT ARMORY
+            
             </a>
         </div>
     </section>
 
     <!-- FEATURED CATEGORIES -->
-    <section class="py-5 bg-black">
+    <section class="py-5" style="background: rgba(0,0,0,0.8);">
         <div class="container">
             <div class="row g-4 text-center font-military">
                 <div class="col-md-4">
-                    <div class="p-4 border border-secondary hover-gold">
-                        <i class="fas fa-crosshairs fa-3x text-gold mb-3"></i>
-                        <h3>WEAPONS</h3>
+                    <div class="tactical-card p-5" onclick="window.location.href='Gallery.html'">
+                        <i class="fas fa-crosshairs fa-4x text-gold mb-4"></i>
+                        <h3 class="text-white">WEAPONS</h3>
+                        <small class="font-tech text-muted">ASSAULT / SNIPER / SIDEARMS</small>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="p-4 border border-secondary hover-gold">
-                        <i class="fas fa-vest fa-3x text-gold mb-3"></i>
-                        <h3>ARMOR</h3>
+                    <div class="tactical-card p-5" onclick="window.location.href='Gallery.html'">
+                        <i class="fas fa-vest fa-4x text-gold mb-4"></i>
+                        <h3 class="text-white">ARMOR</h3>
+                        <small class="font-tech text-muted">VESTS / HELMETS / PADS</small>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="p-4 border border-secondary hover-gold">
-                        <i class="fas fa-binoculars fa-3x text-gold mb-3"></i>
-                        <h3>GEAR</h3>
+                    <div class="tactical-card p-5" onclick="window.location.href='Gallery.html'">
+                        <i class="fas fa-binoculars fa-4x text-gold mb-4"></i>
+                        <h3 class="text-white">GEAR</h3>
+                        <small class="font-tech text-muted">GEAR</small>
+                   
                     </div>
                 </div>
             </div>
         </div>
+        
     </section>
 
-    <footer class="text-center text-muted py-4 font-tech border-top border-secondary">
+    <footer class="text-center text-muted py-4 font-tech border-top border-secondary bg-black">
         &copy; 2023 TACTICAL OPS. ALL RIGHTS RESERVED.
+        <br>
+        <small><a href="admin-login.html" class="text-secondary text-decoration-none hover-white">COMMANDER LOGIN</a></small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
 </body>
 </html>

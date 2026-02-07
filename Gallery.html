@@ -17,8 +17,6 @@
         .comment-user { font-weight: bold; color: #fff; font-size: 0.9em; }
         .comment-text { color: #ccc; font-size: 0.85em; }
         .comment-date { font-size: 0.7em; color: #666; }
-        
-        /* สไตล์สำหรับ QR Code */
         .qr-container {
             background: white;
             padding: 15px;
@@ -41,10 +39,11 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
+                <!-- id="navAuth" จะถูกจัดการโดย checkAuth() ใน data.js -->
                 <ul class="navbar-nav ms-auto align-items-center gap-3" id="navAuth">
                     <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
                     <li class="nav-item"><a class="nav-link active text-gold" href="Gallery.html">ARMORY</a></li>
-                    <li class="nav-item"><a class="nav-link" href="ABOUT.html">ABOUT</a></li>
+                   <li class="nav-item"><a class="nav-link" href="ABOUT.html">ABOUT</a></li>
                 </ul>
             </div>
         </div>
@@ -71,7 +70,7 @@
         <div class="row g-4" id="galleryGrid"></div>
     </div>
 
-    <!-- PRODUCT DETAILS MODAL (POPUP) -->
+    <!-- PRODUCT DETAILS MODAL -->
     <div class="modal fade" id="productModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content bg-dark text-white border-secondary">
@@ -121,7 +120,7 @@
         </div>
     </div>
 
-    <!-- CHECKOUT MODAL (ฟอร์มสั่งซื้อ) -->
+    <!-- CHECKOUT MODAL -->
     <div class="modal fade" id="checkoutModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white border-gold">
@@ -131,7 +130,6 @@
                 </div>
                 <div class="modal-body">
                     <form id="checkoutForm">
-                        <!-- ส่วนที่อยู่จัดส่ง -->
                         <h6 class="text-muted font-tech mb-3 border-bottom border-secondary pb-2">OPERATIVE INFO</h6>
                         <div class="mb-3">
                             <label class="form-label small text-gold">FULL NAME</label>
@@ -145,34 +143,22 @@
                             <label class="form-label small text-gold">SHIPPING ADDRESS</label>
                             <textarea class="form-control bg-black text-white border-secondary" id="cAddr" rows="3" required placeholder="House No, Street, City, Zipcode"></textarea>
                         </div>
-
-                        <!-- ส่วนชำระเงิน -->
                         <h6 class="text-muted font-tech mb-3 border-bottom border-secondary pb-2">PAYMENT METHOD</h6>
                         <div class="mb-3">
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="payCOD" value="COD" checked onchange="togglePayment()">
-                                <label class="form-check-label" for="payCOD">
-                                    <i class="fas fa-truck text-success me-2"></i>Cash On Delivery (COD)
-                                </label>
+                                <label class="form-check-label" for="payCOD"><i class="fas fa-truck text-success me-2"></i>Cash On Delivery (COD)</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="payQR" value="QR" onchange="togglePayment()">
-                                <label class="form-check-label" for="payQR">
-                                    <i class="fas fa-qrcode text-info me-2"></i>PromptPay QR Code
-                                </label>
+                                <label class="form-check-label" for="payQR"><i class="fas fa-qrcode text-info me-2"></i>PromptPay QR Code</label>
                             </div>
                         </div>
-
-                        <!-- ส่วนแสดง QR Code (ซ่อนอยู่) -->
                         <div id="qrDisplay" class="text-center mb-3" style="display: none;">
                             <div class="qr-container">
-                                <!-- ใช้ promptpay.io เพื่อสร้าง QR พร้อมเพย์ที่ถูกต้อง -->
                                 <img src="https://promptpay.io/0928198431.png" alt="PromptPay QR" class="img-fluid" style="width: 200px;">
                             </div>
-                            <div class="mt-2 text-gold font-monospace">
-                                092-819-8431<br>
-                                <small class="text-muted">(Scan with Bank App)</small>
-                            </div>
+                            <div class="mt-2 text-gold font-monospace">092-819-8431<br><small class="text-muted">(Scan with Bank App)</small></div>
                         </div>
                     </form>
                 </div>
@@ -210,12 +196,12 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="data.js"></script>
 
     <script>
+        // --- ส่วนนี้เหมือนเดิม แค่เพิ่ม checkAuth() ใน initSystem ---
         let cart = [];
         let allProducts = [];
         let currentModalProductId = null;
@@ -241,6 +227,9 @@
 
         // --- CORE SYSTEM ---
         function initSystem() {
+            // เรียกฟังก์ชันตรวจสอบ Login ก่อนเลย
+            checkAuth(); 
+
             if (typeof SYSTEM_DATA !== 'undefined' && SYSTEM_DATA.length > 0) {
                 const localProducts = JSON.parse(localStorage.getItem('tactical_products')) || [];
                 const systemIds = SYSTEM_DATA.map(p => p.id);
@@ -341,6 +330,11 @@
             const input = document.getElementById('commentInput');
             const text = input.value.trim();
             if (!text || !currentModalProductId) return;
+            
+            // เช็คว่าล็อกอินยัง? (ถ้าต้องการบังคับ)
+            // const session = sessionStorage.getItem('tactical_session');
+            // if(!session) return Swal.fire('Error', 'Please Login first', 'error');
+
             const allComments = JSON.parse(localStorage.getItem('tactical_comments')) || {};
             if (!allComments[currentModalProductId]) allComments[currentModalProductId] = [];
             allComments[currentModalProductId].unshift({ user: 'Operative', text: text, date: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}) });
@@ -384,14 +378,28 @@
         function openCheckoutModal() {
             if(cart.length === 0) return Swal.fire('Error', 'Cart is empty', 'error');
             
-            // ปิด Cart Sidebar
+            // เช็คว่าล็อกอินยัง?
+            const session = sessionStorage.getItem('tactical_session');
+            if(!session) {
+                 return Swal.fire({
+                    icon: 'warning', title: 'ACCESS DENIED', 
+                    text: 'Please LOGIN to verify your identity before requisition.',
+                    background: '#000', color: '#fff',
+                    showCancelButton: true, confirmButtonText: 'LOGIN NOW', confirmButtonColor: '#fbbf24'
+                }).then((res) => {
+                    if(res.isConfirmed) window.location.href = 'login.html';
+                });
+            }
+
+            // Auto-fill user info
+            const user = JSON.parse(session);
+            document.getElementById('cName').value = user.name || '';
+            document.getElementById('cPhone').value = user.phone || '';
+            document.getElementById('cAddr').value = user.address || '';
+
             bootstrap.Offcanvas.getInstance(document.getElementById('cartOffcanvas')).hide();
-            
-            // คำนวณยอดรวม
             const totalCost = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             document.getElementById('checkoutTotal').innerText = '฿' + totalCost.toLocaleString();
-            
-            // เปิด Checkout Modal
             new bootstrap.Modal(document.getElementById('checkoutModal')).show();
         }
 
@@ -411,7 +419,6 @@
             const addr = document.getElementById('cAddr').value.trim();
             const payment = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-            // Validation
             if (!name || !phone || !addr) {
                 return Swal.fire({ icon: 'error', title: 'MISSING INTEL', text: 'Please fill in all shipping details.', background: '#000', color: '#fff' });
             }
@@ -440,7 +447,6 @@
                     orders.push(newOrder);
                     localStorage.setItem('tactical_orders', JSON.stringify(orders));
                     
-                    // Clear Cart & Reset
                     cart = [];
                     updateCartUI();
                     bootstrap.Modal.getInstance(document.getElementById('checkoutModal')).hide();

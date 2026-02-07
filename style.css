@@ -1,13 +1,17 @@
-/* --- TACTICAL OPS : ELITE THEME v2.0 --- */
+/* --- TACTICAL OPS : MODERN GLASS THEME v8.0 (BEAUTIFUL & CLEAR) --- */
 
-@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@400;600;700&family=Prompt:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@500;600;700&family=Prompt:wght@300;400;500;600&display=swap');
 
 :root {
-    --gold: #fbbf24;
-    --gold-dark: #d97706;
-    --black: #050505;
-    --dark-grey: #121212;
-    --border-color: #333;
+    --gold: #FFD700;       /* ทองสว่างหรูหรา */
+    --gold-hover: #FFC107;
+    --text-main: #FFFFFF;  /* ขาวจั๊วะ */
+    --text-muted: #CCCCCC; /* เทาอ่อน */
+    
+    /* Glass Effect Variables */
+    --glass-bg: rgba(20, 20, 20, 0.85); /* พื้นหลังกระจกดำ */
+    --glass-border: 1px solid rgba(255, 215, 0, 0.3); /* ขอบทองจางๆ */
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); /* เงาฟุ้งๆ */
     
     --font-military: 'Black Ops One', cursive;
     --font-tech: 'Rajdhani', sans-serif;
@@ -16,109 +20,187 @@
 
 body {
     font-family: var(--font-body);
-    background-color: var(--black);
-    color: white;
+    color: var(--text-main);
     overflow-x: hidden;
-    padding-top: 70px; /* เว้นที่ให้ Navbar */
+    padding-top: 80px;
+    min-height: 100vh;
+    
+    /* พื้นหลังรูปภาพ Tactical เท่ๆ + เคลือบสีดำทับให้อ่านตัวหนังสือออก */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
+                url('https://images.unsplash.com/photo-1595590424283-b8f17842773f?auto=format&fit=crop&q=80&w=1920');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-/* --- TYPOGRAPHY --- */
-.font-military { font-family: var(--font-military); letter-spacing: 2px; }
-.font-tech { font-family: var(--font-tech); text-transform: uppercase; }
+/* --- TYPOGRAPHY (ตัวหนังสือชัดๆ) --- */
+h1, h2, h3, h4, h5, h6, 
+.font-military, .brand-font {
+    font-family: var(--font-military); 
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* เงาหลังตัวหนังสือให้อ่านง่าย */
+    text-transform: uppercase;
+}
+
+.font-tech { 
+    font-family: var(--font-tech); 
+    text-transform: uppercase; 
+    font-weight: 700; 
+    letter-spacing: 1px;
+}
+
 .text-gold { color: var(--gold) !important; }
-.text-shadow { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+.text-white { color: #fff !important; }
+
+/* --- GLASS CONTAINERS (กล่องกระจก) --- */
+.tactical-card, 
+.auth-card, 
+.stat-card,
+.modal-content,
+.comment-box {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px); /* เอฟเฟกต์เบลอหลังกระจก */
+    -webkit-backdrop-filter: blur(10px);
+    border: var(--glass-border);
+    border-radius: 12px; /* มุมมนสวยงาม */
+    box-shadow: var(--glass-shadow);
+    color: var(--text-main);
+}
 
 /* --- NAVBAR --- */
 .navbar-tactical {
-    background: rgba(5, 5, 5, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 2px solid var(--gold);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
+
 .nav-link {
     font-family: var(--font-tech);
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: #aaa !important;
+    font-size: 1.1rem;
+    color: #e0e0e0 !important;
     transition: 0.3s;
-    position: relative;
 }
+
 .nav-link:hover, .nav-link.active {
     color: var(--gold) !important;
-}
-.nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 10%; width: 80%;
-    height: 2px;
-    background: var(--gold);
-    box-shadow: 0 0 10px var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* --- COMPONENTS --- */
+/* --- BUTTONS --- */
 .btn-gold {
-    background: var(--gold);
-    color: black;
-    font-weight: bold;
-    font-family: var(--font-tech);
-    padding: 10px 25px;
+    background: linear-gradient(45deg, #FFD700, #FFC107);
     border: none;
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-    transition: 0.3s;
-}
-.btn-gold:hover {
-    background: white;
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-    transform: translateY(-2px);
+    color: #000;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
+.btn-gold:hover {
+    background: linear-gradient(45deg, #FFC107, #FFAB00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+    color: #000;
+}
+
+.btn-outline-warning {
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    background: transparent;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.btn-outline-warning:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+/* --- CARD STYLING --- */
 .tactical-card {
-    background: #0f0f0f;
-    border: 1px solid #222;
-    transition: 0.3s;
-    position: relative;
+    transition: all 0.3s ease;
     overflow: hidden;
 }
+
 .tactical-card:hover {
-    border-color: var(--gold);
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-.tactical-card img {
-    height: 220px;
-    object-fit: cover;
-    width: 100%;
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
 }
 
-/* --- BACKGROUNDS --- */
+.tactical-card img {
+    height: 240px;
+    object-fit: cover;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* --- FORMS & INPUTS --- */
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 6px;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25) !important;
+}
+
+.form-label {
+    color: var(--gold);
+    font-weight: 500;
+    font-family: var(--font-tech);
+    letter-spacing: 1px;
+}
+
+/* --- TABLES (Admin) --- */
+.table {
+    color: #fff;
+}
+.table thead th {
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    font-family: var(--font-tech);
+    font-size: 1.1em;
+}
+.table td {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    vertical-align: middle;
+}
+
+/* --- UTILITIES --- */
+/* เส้นตารางจางๆ บนพื้นหลังเพื่อความเท่ */
 .bg-grid {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: radial-gradient(#222 1px, transparent 1px);
-    background-size: 30px 30px;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
     z-index: -1;
     pointer-events: none;
 }
-.scanlines {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 999;
+
+/* Badge สวยๆ */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
 }
 
-/* --- PAGE HEADER --- */
-.page-header {
-    background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1595590424283-b8f17842773f?auto=format&fit=crop&q=80&w=1920');
-    background-size: cover;
-    background-position: center;
-    padding: 100px 0 50px;
-    margin-bottom: 50px;
-    border-bottom: 2px solid var(--gold);
-}
-
-/* --- FOOTER --- */
-footer {
-    background: #020202;
-    border-top: 1px solid #222;
-    margin-top: 80px;
-    padding: 50px 0 20px;
-}
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
